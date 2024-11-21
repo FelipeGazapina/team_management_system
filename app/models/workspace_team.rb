@@ -1,0 +1,2 @@
+class WorkspaceTeam < ApplicationRecord
+end
