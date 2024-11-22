@@ -1,6 +1,6 @@
 class CreateWorkspaces < ActiveRecord::Migration[7.0]
   def change
-    create_table :workspaces, id: :uuid do |t|
+    create_table :workspaces do |t|
       t.string :name
       t.timestamps
     end

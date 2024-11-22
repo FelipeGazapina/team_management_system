@@ -1,0 +1,38 @@
+
+<%= form_with model: task do |form| %>
+  <div class="space-y-4">
+    <%= render 'shared/input_text/index',
+               form: form,
+               field: :title,
+               resource: @task,
+               input_options: nil,
+               label_text: "Problema" %>
+    <%= render 'shared/input_text/index',
+               form: form,
+               field: :description,
+               resource: @task,
+               input_options: nil,
+               label_text: 'Critérios de aceite' %>
+    <%= render 'shared/input_select/index',
+               form: form,
+               field: :team_id,
+               resource: @task,
+               label_text: "Time responsável",
+               input_options: Team.all.pluck(:name, :id) %>
+    <%= render 'shared/input_select/index',
+               form: form,
+               field: :customer_id,
+               resource: @task,
+               label_text: "Clientes",
+               input_options: Customer.all.pluck(:name, :id)  %>
+    <% @task.errors.full_messages.each do |message| %>
+      <div class="text-red-500"><%= message %></div>
+    <% end %>
+  </div>
+  <div class="flex gap-2 items-center mt-4">
+    <%= render 'shared/button/index', inner_text: "Cancelar", action: tasks_path, type: "outline" %>
+    <div>
+      <%= form.submit "Salvar", class: "bg-blue-600 rounded shadow text-white p-2 hover:opacity-80 transition" %>
+    </div>
+  </div>
+<% end %>

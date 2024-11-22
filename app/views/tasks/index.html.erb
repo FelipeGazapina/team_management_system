@@ -1,0 +1,23 @@
+<section class="container gap-6 mx-auto my-6">
+  <%= render 'shared/button/index', inner_text: 'Adicionar task', action: new_task_path %>
+  <div class="flex my-12 gap-4">
+    <% if @tasks.any? %>
+      <% @tasks.each do | task | %>
+        <div class="bg-neutral-100 p-4 rounded min-w-96 border
+        hover:scale-105 hover:cursor-pointer transition">
+          <h2><%= task.title %></h2>
+          <p><%= task.description %></p>
+          <span><%= task.status %></span>
+        </div>
+      <% end %>
+    <% else %>
+      <div>
+        <p>
+          Não há nenhuma task criada,
+          <a class="text-blue-600" href="<%= new_task_path %>">clique aqui</a>
+          para adicionar.
+        </p>
+      </div>
+    <% end %>
+  </div>
+</section>

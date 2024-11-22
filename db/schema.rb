@@ -10,83 +10,78 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_11_21_190124) do
+ActiveRecord::Schema[7.0].define(version: 2024_11_22_150946) do
   create_table "blocks", force: :cascade do |t|
-    t.string "reasons"
-    t.string "start_date"
-    t.string "end_date"
+    t.string "reason"
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.integer "task_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["task_id"], name: "index_blocks_on_task_id"
   end
 
   create_table "customers", force: :cascade do |t|
     t.string "name"
-    t.string "email"
-    t.integer "contract_price", default: 0
+    t.string "contact_info"
+    t.decimal "contract_price"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
   create_table "responsibles", force: :cascade do |t|
     t.integer "user_id", null: false
-    t.integer "base_charge"
-    t.string "start_date"
-    t.string "end_date"
+    t.integer "task_id", null: false
+    t.decimal "base_charge"
+    t.datetime "start_date"
+    t.datetime "end_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["task_id"], name: "index_responsibles_on_task_id"
     t.index ["user_id"], name: "index_responsibles_on_user_id"
   end
 
   create_table "tasks", force: :cascade do |t|
-    t.integer "team_id"
-    t.integer "responsibles_id"
-    t.integer "customers_id"
-    t.integer "blocks_id"
     t.string "title"
     t.text "description"
-    t.integer "status", default: 0
-    t.string "due_date"
+    t.datetime "due_date"
+    t.integer "status"
+    t.integer "team_id", null: false
+    t.integer "customer_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["blocks_id"], name: "index_tasks_on_blocks_id"
-    t.index ["customers_id"], name: "index_tasks_on_customers_id"
-    t.index ["responsibles_id"], name: "index_tasks_on_responsibles_id"
+    t.index ["customer_id"], name: "index_tasks_on_customer_id"
     t.index ["team_id"], name: "index_tasks_on_team_id"
   end
 
   create_table "teams", force: :cascade do |t|
     t.string "name"
-    t.integer "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_teams_on_user_id"
+  end
+
+  create_table "teams_users", id: false, force: :cascade do |t|
+    t.integer "team_id", null: false
+    t.integer "user_id", null: false
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "username"
+    t.string "name"
     t.string "email"
+    t.decimal "price_hour"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "workspace_teams", force: :cascade do |t|
-    t.integer "workspace_id", null: false
-    t.integer "team_id", null: false
+  create_table "workspaces", force: :cascade do |t|
+    t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["team_id"], name: "index_workspace_teams_on_team_id"
-    t.index ["workspace_id"], name: "index_workspace_teams_on_workspace_id"
   end
 
-# Could not dump table "workspaces" because of following StandardError
-#   Unknown type 'uuid' for column 'id'
-
+  add_foreign_key "blocks", "tasks"
+  add_foreign_key "responsibles", "tasks"
   add_foreign_key "responsibles", "users"
-  add_foreign_key "tasks", "blocks", column: "blocks_id"
-  add_foreign_key "tasks", "customers", column: "customers_id"
-  add_foreign_key "tasks", "responsibles", column: "responsibles_id"
+  add_foreign_key "tasks", "customers"
   add_foreign_key "tasks", "teams"
-  add_foreign_key "teams", "users"
-  add_foreign_key "workspace_teams", "teams"
-  add_foreign_key "workspace_teams", "workspaces"
 end
